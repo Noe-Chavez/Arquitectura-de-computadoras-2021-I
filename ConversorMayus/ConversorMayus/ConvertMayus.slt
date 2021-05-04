@@ -1,0 +1,88 @@
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/03/21 16:21:06
+ConvertMayus.asm					     Page 1 - 1
+
+
+				 
+						.386											; se seleciona el microprosesador
+											
+						.model flat, stdcall							; el modelo de memoria
+
+						.stack 2560										; 2KB RAM para la pila del sistema  
+
+				ExitProcess PROTO, dwExitCode:DWORD		
+						; Converir cadena a mayusculas.
+ 00000000					.data											; determina el segmento de datos								
+
+ 00000000 48 6F 6C 61 20			cadena1	BYTE "Hola MuNDo", 0				; El cero corresponde al fin de cadena.
+	   4D 75 4E 44 6F
+	   00
+ 0000000B  00000100 [				cadena2	BYTE 256 DUP(0)						; Reservando 256 casillas de tipo byte, inicializadas a cero.
+	    00
+	   ]
+
+ 00000000					.CODE											; inicia la seccion del codigo
+ 00000000			main proc
+					
+ 00000000  BE 00000000 R			MOV	ESI, OFFSET cadena1		; Se carga dirección de memoria  al registro ESI, offset se apunta a la cadenas y el resto de sus dato.
+ 00000005  BF 0000000B R			MOV EDI, OFFSET cadena2		; Se guarda la dirección de memoria destino al registro EDI
+ 0000000A  FC					CLD							; D = 0, Se establece la direccion para el incremento de los registros indices.
+ 0000000B  B9 0000000A				MOV ECX, 10
+ 00000010			INICIO_LOOP:
+ 00000010  AC					LODSB
+ 00000011  3C 61				CMP AL, 'a'
+ 00000013  0F 9D C3				SETGE BL
+ 00000016  3C 7A				CMP AL, 'z'
+ 00000018  0F 9E C2				SETLE DL 
+ 0000001B  22 DA				AND BL, DL
+ 0000001D  74 02				JE ETIQ1
+ 0000001F  2C 20				SUB AL, 32
+ 00000021  AA			ETIQ1:  STOSB
+ 00000022  E2 EC				LOOP INICIO_LOOP
+
+					invoke ExitProcess, 0
+ 0000002B			main endp
+					end
+Microsoft (R) Macro Assembler Version 14.28.29914.0	    05/03/21 16:21:06
+ConvertMayus.asm					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00000A00 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000010B DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000002B DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000002B Public STDCALL
+  INICIO_LOOP  . . . . . . . . .	L Near	 00000010 _TEXT	
+  ETIQ1  . . . . . . . . . . . .	L Near	 00000021 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+cadena1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+cadena2  . . . . . . . . . . . .	Byte	 0000000B _DATA	
+
+	   0 Warnings
+	   0 Errors
