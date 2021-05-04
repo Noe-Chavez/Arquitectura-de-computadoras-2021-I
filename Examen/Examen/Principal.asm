@@ -8,20 +8,22 @@
 ExitProcess PROTO, dwExitCode:DWORD		
 		.DATA									; determina el segmento de datos
 
-		num_1	BYTE "1", 0						; valor en ANCII del primer valor
-		num_2   BYTE "3", 0						; valor en ANCII del segundo valor
-		result	DB ?							; declaraciÛn de variable que almacena el resultado
+		num_1			BYTE "1", 0				; valor en ANCII del primer valor
+		num_2			BYTE "3", 0				; valor en ANCII del segundo valor
+		result			DB ?					; declaraci√≥n de variable que almacena el resultado
+		result_cadena   BYTE ?					; declaraci√≥n de variable que almacena el resultado en ANCII 
 
 		.CODE									; inicia la seccion del codigo
 main PROC
 	
 	MOV AL, num_1								; AL <-- num_1
 	MOV BL, num_2								; BL <-- num_2
-	SUB AL, 30h									; AL <-- AL - 30h, para encontrar el valor equivalente numÈrico 1. 
-	SUB BL, 30h									; BL <-- BL - 30h, para encontrar el valor equivalente numÈrico 3.
-
+	SUB AL, 30h									; AL <-- AL - 30h, para encontrar el valor equivalente num√©rico 1 
+	SUB BL, 30h									; BL <-- BL - 30h, para encontrar el valor equivalente num√©rico 3
 	ADD AL, BL									; AL <-- AL + valorB
 	MOV result, AL								; result <-- AL
+	ADD AL, 30h									; AL <-- AL + 34h
+	MOV result_cadena, AL 						; result <-- AL
 
 	INVOKE ExitProcess, 0
 main ENDP
